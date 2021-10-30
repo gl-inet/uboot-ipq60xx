@@ -103,7 +103,7 @@ const uchar default_environment[] = {
 #ifdef	CONFIG_EXTRA_ENV_SETTINGS
 	CONFIG_EXTRA_ENV_SETTINGS
 #endif
-"lf=tftpb 0x44000000 openwrt-gl-ax1800.bin && sf probe; imgaddr=0x44000000 && source 0x44000000:script\0"
+"lf=tftpb 0x44000000 openwrt-gl-ax1800.bin && nand erase 0xa00000 0x7300000 && nand write 0x44000000 0xa00000 $filesize\0"
 "lfq=tftpb 0x44000000 qsdk-gl-ax1800.bin && sf probe; imgaddr=0x44000000 && source 0x44000000:script\0"
 "lfq0=tftpb 0x44000000 nand-ipq6018-apps.img && sf probe; imgaddr=0x44000000 && source 0x44000000:script\0"
 

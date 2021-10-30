@@ -178,9 +178,14 @@ int check_fw_type(void *address){
 	u32 *sign_flas=(u32 *)(address+0x5c);
 	u16 *sign_55aa=(u16 *)(address+0x1fe);
 	u32 *sign_doodfeed=(u32 *)address;
+	u32 *sign_ubi=(u32 *)address;
 
 	if (*sign_flas==0x73616c46 ) {
 		return FW_TYPE_QSDK;
+	}
+
+	if (*sign_ubi==0x23494255 ) {
+		return FW_TYPE_UBI;
 	}
 
 	if(*sign_doodfeed==0xedfe0dd0)

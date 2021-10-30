@@ -42,6 +42,7 @@ void check_button_is_press(void);
 #define FW_TYPE_NOR 0
 #define FW_TYPE_EMMC 1
 #define FW_TYPE_QSDK 2
+#define FW_TYPE_UBI 3
 
 int check_test(void);
 int check_config(void);
