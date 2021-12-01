@@ -213,6 +213,7 @@ int webfailsafe_is_running = 0;
 int webfailsafe_ready_for_upgrade = 0;
 int webfailsafe_upgrade_type = WEBFAILSAFE_UPGRADE_TYPE_FIRMWARE;
 extern int webfailsafe_post_done;
+extern int file_too_big;
 void NetReceiveHttpd(volatile uchar * inpkt, int len);
 
 /**********************************************************************/
@@ -619,7 +620,7 @@ restart:
 #if 1
 			//workaround for some case we can't receive uip_acked
 			//just force upgrade
-			if(webfailsafe_post_done && !webfailsafe_ready_for_upgrade){
+			if(webfailsafe_post_done && !file_too_big && !webfailsafe_ready_for_upgrade){
 				if(wait_time == 0)
 					wait_time = get_timer(0);
 				if((get_timer(0) - wait_time) > 1000){
