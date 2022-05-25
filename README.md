@@ -19,7 +19,7 @@ uboot package definition to sdk32/package/ directory is also okay, if you not pr
 clone uboot source code
 ```
 cd qca/src/
-git clone https://gitlab.com/gl.router/ax1800-uboot.git
+git clone https://github.com/gl-inet/uboot-ipq60xx.git u-boot-2016
 cd ../..
 ```
 
