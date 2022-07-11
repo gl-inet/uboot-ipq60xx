@@ -114,6 +114,7 @@
 #include "httpd.h"
 #include <gl_api.h>
 DECLARE_GLOBAL_DATA_PTR;
+#include <../drivers/net/ipq6018/ipq6018_ppe.h>
 
 /** BOOTP EXTENTIONS **/
 
@@ -510,6 +511,7 @@ restart:
 			dhcpd_end = 0;
 			NetUipLoop = 0;
 #endif
+			switch_to_bridge();
 			HttpdStart();
 			break;
 #endif

@@ -16,6 +16,7 @@
 #include <u-boot/sha256.h>
 #include <asm/arch-qca-common/qca_common.h>
 #include <gl_api.h>
+#include <../drivers/net/ipq6018/ipq6018_ppe.h>
 
 #ifdef CONFIG_WINDOWS_UPGRADE_SUPPORT
 extern char gl_set_uip_info(void);
@@ -398,6 +399,7 @@ __weak int apps_iscrashed_crashdump_disabled(void)
 
 void autoboot_command(const char *s)
 {
+	int glflag = 0;
 	/*
 	char *tmp;
 	int tftp_upgrade_en;
@@ -435,8 +437,12 @@ void autoboot_command(const char *s)
 		printf("Crashdump disabled, resetting the board..\n");
 		reset_board();
 	}
-
-	if (stored_bootdelay != -1 && s && !abortboot(stored_bootdelay)) {
+	glflag = abortboot(stored_bootdelay);
+	if(glflag == 1)
+	{
+		switch_to_bridge();
+	}
+	if (stored_bootdelay != -1 && s && !glflag) {
 #ifdef CONFIG_WINDOWS_UPGRADE_SUPPORT
 		gl_probe_upgrade = 0;
 #endif
