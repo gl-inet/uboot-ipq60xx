@@ -1239,6 +1239,32 @@ void ipq6018_ppe_interface_mode_init(void)
 	ppe_port_mux_mac_type_set(5, mode1);
 }
 
+void switch_to_bridge(void)
+{
+	#ifdef CONFIG_IPQ6018_BRIDGED_MODE
+		ipq6018_vsi_setup(2, 0x3f);
+		/* Add CPU port 0 to VSI 2 */
+		ipq6018_ppe_vp_port_tbl_set(0, 2);
+
+		/* Add port 1 - 4 to VSI 2 */
+		ipq6018_ppe_vp_port_tbl_set(1, 2);
+		ipq6018_ppe_vp_port_tbl_set(2, 2);
+		ipq6018_ppe_vp_port_tbl_set(3, 2);
+		ipq6018_ppe_vp_port_tbl_set(4, 2);
+		ipq6018_ppe_vp_port_tbl_set(5, 2);
+
+	#else
+		ipq6018_ppe_vp_port_tbl_set(1, 2);
+		ipq6018_ppe_vp_port_tbl_set(2, 3);
+		ipq6018_ppe_vp_port_tbl_set(3, 4);
+		ipq6018_ppe_vp_port_tbl_set(4, 5);
+		ipq6018_vsi_setup(2, 0x03);
+		ipq6018_vsi_setup(3, 0x05);
+		ipq6018_vsi_setup(4, 0x09);
+		ipq6018_vsi_setup(5, 0x11);
+	#endif
+}
+
 /*
  * ipq6018_ppe_provision_init()
  */
@@ -1256,24 +1282,6 @@ void ipq6018_ppe_provision_init(void)
 
 	/* flow ctrl disable */
 	ipq6018_ppe_reg_write(0x200368, 0xc88);
-
-#ifdef CONFIG_IPQ6018_BRIDGED_MODE
-	/* Add CPU port 0 to VSI 2 */
-	ipq6018_ppe_vp_port_tbl_set(0, 2);
-
-	/* Add port 1 - 4 to VSI 2 */
-	ipq6018_ppe_vp_port_tbl_set(1, 2);
-	ipq6018_ppe_vp_port_tbl_set(2, 2);
-	ipq6018_ppe_vp_port_tbl_set(3, 2);
-	ipq6018_ppe_vp_port_tbl_set(4, 2);
-	ipq6018_ppe_vp_port_tbl_set(5, 2);
-
-#else
-	ipq6018_ppe_vp_port_tbl_set(1, 2);
-	ipq6018_ppe_vp_port_tbl_set(2, 3);
-	ipq6018_ppe_vp_port_tbl_set(3, 4);
-	ipq6018_ppe_vp_port_tbl_set(4, 5);
-#endif
 
 	/* Unicast priority map */
 	ipq6018_ppe_reg_write(IPQ6018_PPE_QM_UPM_TBL, 0);
@@ -1322,15 +1330,6 @@ void ipq6018_ppe_provision_init(void)
 
 	/* Global learning */
 	ipq6018_ppe_reg_write(0x060038, 0xc0);
-
-#ifdef CONFIG_IPQ6018_BRIDGED_MODE
-	ipq6018_vsi_setup(2, 0x3f);
-#else
-	ipq6018_vsi_setup(2, 0x03);
-	ipq6018_vsi_setup(3, 0x05);
-	ipq6018_vsi_setup(4, 0x09);
-	ipq6018_vsi_setup(5, 0x11);
-#endif
 
 	/* Port 0-7 STP */
 	for (i = 0; i < 8; i++)
