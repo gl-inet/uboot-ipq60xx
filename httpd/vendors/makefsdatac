@@ -67,7 +67,7 @@ function print_data_array() {
 
 	# Content
 	if [ "$_file_ext" == "css"  ]; then
-		if [ -e "$yui_compressor" ]; then
+		if type -p java >/dev/null && [ -e "$yui_compressor" ]; then
 			_file_content=`java -jar "$yui_compressor" --charset utf-8 "$1" | od -A n -t x1 | tr -d '\r\n' | sed 's/ /0x/;s/ /, 0x/g;s/.\{102\}/&\n/g'`
 		else
 			_file_content=`cat "$1" | tr -d '\r\n\t' | od -A n -t x1 | tr -d '\r\n' | sed 's/ /0x/;s/ /, 0x/g;s/.\{102\}/&\n/g'`
