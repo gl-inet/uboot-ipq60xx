@@ -165,11 +165,7 @@ int check_config()
 		tmp = (volatile unsigned char *)0x44000006 + i;
 		addr[i] = *tmp;
 	}
-	//printf("LAN: %x:%x:%x:%x:%x:%x\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
-	if (!memcmp(addr, addr_tmp, 6)) {
-		printf("Device don't have LAN MAC info, please write MAC in calibration firmware...\n");
-		return -1;
-	}
+
 	printf("Device have MAC info, starting firmware...\n\n");
 	return 0;
 }
@@ -196,7 +192,6 @@ int check_fw_type(void *address){
 		return -1;
 	return 0;
 }
-/*
 
 int auto_update_flags = 0;
 
@@ -211,7 +206,6 @@ int check_network(int tryCount)
 			auto_update_flags = 1;
 			break;
 		}
-		udelay (1000000);
 	}
 
 	if (auto_update_flags) {
@@ -223,39 +217,12 @@ int check_network(int tryCount)
 
 int auto_update_by_tftp()
 {
-	int ret = -1;
-	char buf[128] = {0};
-	const char *file_sz_str;
-	unsigned long file_size;
+	printf("\n\n****************************\n*    FIRMWARE UPGRADING    *\n* DO NOT POWER OFF DEVICE! *\n****************************\n\n");
 
-	if (check_network(2) != 0) {
-		//printf("host no alive.\n");
-		return -1;
+	if (check_network(2) == 0) {
+		run_command("run lf", 0);
 	}
 
-	if (run_command("tftpboot 0x44000000 openwrt-gl-mv1000.bin", 0) == 0) {
-		file_sz_str = getenv("filesize");
-		file_size = simple_strtoul(file_sz_str, NULL, 16);
-		if(check_fw_type((void *)0x44000000)==FW_TYPE_NOR){
-		printf("\n\n****************************\n*    FIRMWARE UPGRADING    *\n* DO NOT POWER OFF DEVICE! *\n****************************\n\n");
-		sprintf(buf,
-				"sf probe && sf update 0x%lx 0x%lx 0x%lx",
-				(unsigned long int)0x44000000,
-				(unsigned long int)WEBFAILSAFE_UPLOAD_FW_ADDRESS,
-				(unsigned long int)file_size);
-		}else if(check_fw_type((void *)0x44000000)==FW_TYPE_EMMC){
-			printf("\n\n****************************\n*    FIRMWARE UPGRADING    *\n* DO NOT POWER OFF DEVICE! *\n****************************\n\n");
-			sprintf(buf,
-					"mmc dev 0 && mmc erase 0 0x109800 && mmc write 0x%lx 0x%lx 0x%lx",
-					(unsigned long int)0x44000000,
-					(unsigned long int)0x0,
-					(unsigned long int)(file_size/512+1));
-		}else{
-			return(-1);
-		}
-		return(run_command(buf, 0));
-	}
-	return ret;
+	return 0;
 }
 
-*/

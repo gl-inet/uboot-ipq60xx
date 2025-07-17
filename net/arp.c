@@ -27,6 +27,9 @@
 # define ARP_TIMEOUT_COUNT	CONFIG_NET_RETRY_COUNT
 #endif
 
+#define	AXT1800_CONFIG_ARP_TIMEOUT	2000
+#define	AXT1800_CONFIG_NET_RETRY_COUNT	3
+
 struct in_addr net_arp_wait_packet_ip;
 static struct in_addr net_arp_wait_reply_ip;
 /* MAC address of waiting packet's destination */
@@ -106,10 +109,10 @@ int arp_timeout_check(void)
 	t = get_timer(0);
 
 	/* check for arp timeout */
-	if ((t - arp_wait_timer_start) > ARP_TIMEOUT) {
+	if ((t - arp_wait_timer_start) > AXT1800_CONFIG_ARP_TIMEOUT) {
 		arp_wait_try++;
 
-		if (arp_wait_try >= ARP_TIMEOUT_COUNT) {
+		if (arp_wait_try >= AXT1800_CONFIG_NET_RETRY_COUNT) {
 			puts("\nARP Retry count exceeded; starting again\n");
 			arp_wait_try = 0;
 			net_set_state(NETLOOP_FAIL);

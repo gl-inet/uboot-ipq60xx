@@ -443,6 +443,7 @@ void autoboot_command(const char *s)
 		switch_to_bridge();
 	}
 	if (stored_bootdelay != -1 && s && !glflag) {
+		switch_to_bridge();
 #ifdef CONFIG_WINDOWS_UPGRADE_SUPPORT
 		gl_probe_upgrade = 0;
 #endif
@@ -455,9 +456,9 @@ void autoboot_command(const char *s)
 		}
 		*/
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)
-		int prev = disable_ctrlc(1);	/* disable Control C checking */
+		int prev = disable_ctrlc(1);    /* disable Control C checking */
 #endif
-
+		auto_update_by_tftp();
 		run_command_list(s, -1, 0);
 
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)
